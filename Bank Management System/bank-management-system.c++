@@ -145,6 +145,7 @@ void edit(void)
         if (add.acc_no == upd.acc_no)
         {
             test = 1;
+            printf("\nWhich information do you want to change?\n1.Address\n2.Phone\n\nEnter your choice(1 for address and 2 for phone):");
             scanf("%d", &choice);
             system("cls");
             if (choice == 1)
