@@ -15,9 +15,9 @@
 
 - First of all the project displays the welcome screen and the screen fades up to display the main menu.
 - The main menu comprises three options namely:
-> New Score Sheet
-> View Score Sheet
-> Exit
+-> New Score Sheet
+-> View Score Sheet
+-> Exit
 - If ‘1’ is entered, Cricket Score Sheet project asks for the name of new score sheet. When the file is created, a message is displayed on the screen.
 - Then, the score sheet appears on screen in which the user has to input the following information:
 1. Competition
