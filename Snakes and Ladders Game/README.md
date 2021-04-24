@@ -105,3 +105,8 @@ In this function, an address is passed as argument and entered password is retur
 *Playfilesync(char)*
 
 This function is used in the program to play the sound of the game. This function enables the programmer to embed the sound in their console based program. This function takes the file name to be played. The file to be played should be inwav format.
+
+## Algorithm & Flowchart:
+
+Here, individual algorithms and flowcharts have been present in a sequential manner for the functions that make up this gaming project.
+
