@@ -110,3 +110,66 @@ This function is used in the program to play the sound of the game. This functio
 
 Here, individual algorithms and flowcharts have been present in a sequential manner for the functions that make up this gaming project.
 
+![image](https://user-images.githubusercontent.com/74362909/115964652-b3a70900-a54f-11eb-9e50-c7adc6943eb8.png)
+
+### 1. main ()
+
+Step 1: Start
+
+Step 2 : Display the menu items.
+
+Step 3: Check the user input and go to respective functions.
+
+- (a): If 1 go to main game() function
+
+- (b): if 2 go to new game
+
+- (c): If 3 go to load game
+
+- (d): If 4 go to save game
+
+- (e): If 5 go to tutorial
+
+- (f): If 6 go to step 4.
+
+Step 4: Stop
+
+### 2. main game()
+
+![image](https://user-images.githubusercontent.com/74362909/115964738-0aacde00-a550-11eb-9b6d-63866fd380a9.png)
+
+Step 1: Start
+
+Step 2: Display the layout of the board of snakes and ladders from layout function.
+
+Step 3: Call the dice function and store returned value to a variable(c)
+
+Step 4: Check whether the p1 and p2 value is zero or not
+
+- 4(a): If yes, check the dice value
+
+- if it is 1 or 6 change respective player’s value to 1.
+
+- 4(b): If no increase the value of turn, call position function and go to step 3.
+
+Step 5: Check whether sum of player’s value and dice(c) greater than 100 or not
+
+- 5(a): If yes increase value of turn and go to step 3,
+
+Step 6: Check whether sum player’s value and dicer equals 100 or not
+
+- 6(a): if yes, display the player name as a winner got main.
+
+- 6(b): if no, add the players value and dicer.
+
+Step 8: Call the function position to locate the player on the board.
+
+Step 9: Check whether dice value is 1 or 6.
+
+- 9(a): if yes, decrease turn by 1.
+
+Step 10: Increase the turn by 1.
+
+Step 11: Go to step 3.
+
+Step 12: Stop
