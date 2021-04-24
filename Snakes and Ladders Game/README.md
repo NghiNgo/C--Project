@@ -232,7 +232,7 @@ Step 3: Find the quotient when j is divided by 10.
 
 Step 4: Check the quotient value is even or not?
 
-- 4(a): if yes, Assign the value of i as 1. Display the sum of i and j. Increase the value of i by 1. Check the value of i whether it is less than equals to 10 or not? If yes, goto step 4(a).If no goto step 5.
+- 4(a): if yes, Assign the value of i as 1. Display the sum of i and j. Increase the value of i by 1. Check the value of i whether it is less than equals to 10 or not? If yes, goto step 4(a). If no goto step 5.
 
 - 4(b): If no, Assign the value of I as 10. Display the sum of I and j. Decrease the value of I by 1. Check whether the value of i is greater than 0 or not? If yes, goto step 4(b). If no, go to step 5.
 
