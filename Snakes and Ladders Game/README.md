@@ -247,3 +247,119 @@ Step 6: Check whether j if less than 100 or not?
 Step 7: Go to main() function of snakes and ladders.
 
 Step 8: Stop.
+
+### 7. Drawviperandladder ()
+
+![image](https://user-images.githubusercontent.com/74362909/116038940-4cdf3800-a694-11eb-9f9f-4f928b0a253a.png)
+
+Step 1: Start
+
+Step 2: Open the data file containing the initial and final position of viper and the ladder.
+
+Step 3: Read initial and final position of viper and ladder.
+
+Step 4: Find the coordinates of intial and final position of the snakes and ladders and store to initial.x, initial.y, final.x and final.y.
+
+Step 5: Initialize a variable (a) with y coordinate of initial position.a=initial.y
+
+Step 6: Locate the Cursor position as initial.x and a.
+
+Step 7: Display asterisk (*).
+
+Step 8 : Increase the value of a by 1.
+
+Step 9: Check whether the value of a is less than final.y or not?
+
+- 9(a): If yes, go to step 6.
+
+- 9(b): If no, go to step 10.
+
+Step 10: Initialize a variable (b) with x coordinate of initial position. b=initial.x
+
+Step 11: Locate the Cursor position as b and initial.y.
+
+Step 12: Display asterisk (*).
+
+Step 13 : Increase the value of b by 1.
+
+Step 14: Check whether the value of b is less than final.x or not?
+
+- 14(a): If yes, go to step 11.
+
+- 14(b): If no, go to step 15.
+
+Step 15: Check whether it is end of file or not?
+
+- 15(a): If yes, go to step 17.
+
+- 15(b): if no, go to step 3.
+
+Step 16: Go to main() function of snakes and ladders.
+
+Step 17: Stop.
+
+### 8. Dice ()
+
+Step 1: Start.
+
+Step 2: Initialize a variable as 1.
+
+Step 3: Increase the value of the variable by 1.
+
+Step 4: Check whether there is keyboard input or not?
+
+- 4(a): if yes, return the value of the variable as the dice value and go to main().
+
+- 4(b): if no, go to step 5.
+
+Step 5: Check whether counter variable equals 6 or not?
+
+- 5(a): if yes, assign the value of counter as 1 and goto Step 3.
+
+- 5(b): if no, goto Step 3.
+
+Step 6: Stop.
+
+### 9. Position ()
+
+![image](https://user-images.githubusercontent.com/74362909/116039173-9af43b80-a694-11eb-89e0-396700835d07.png)
+
+Step 1: Start.
+
+Step 2: Display white space on the initial position of the players.
+
+Step 3: Get the new player’s position.
+
+Step 4: Locate the X and Y coordinate of the player’s position.
+
+Step 5: Display the respective player to the position.
+
+Step 6: Go to the main.
+
+Step 7: Stop.
+
+### 10. Viperandladder ()
+
+![image](https://user-images.githubusercontent.com/74362909/116039239-b2332900-a694-11eb-85bd-44e7a296cd99.png)
+
+Step 1: Start.
+
+Step 2: Open the file containing initial and the final position of the viper and ladder.
+
+Step 3: Read initial and final position of viper and ladders.
+
+Step 4: Check the player’s position with the initial position of the viper and ladder, whether it matches or not?
+
+- 4(a): If yes, Assign the value of player with the final value of viper or ladder.
+
+- 4(b): if no, go to Step 5.
+
+Step 5: Check whether the position of the player 1 and the position of player 2 matches or not?
+
+- 5(a): If yes, Check the turn whether it is odd or not? If yes, assign player 1’s position equal to 1. If no, assign player 2’s position equal to 1.
+
+- 5(b): if no, go to step 6.
+
+Step 6: Go to main().
+
+Step 7: Stop.
