@@ -75,7 +75,7 @@ public:
 		IPos,	  // initial position
 		PPos,	  // Previous position
 		CPos,	  //current stream position
-				  //    EPos,             // End stream position
+		//    EPos,             // End stream position
 		Xpos,
 		Ypos,
 		data_length,   //current editing data length
