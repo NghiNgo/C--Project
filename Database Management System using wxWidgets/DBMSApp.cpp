@@ -3,7 +3,7 @@
 // Name:        DBMSApp.cpp
 // Author:      bunkdeath
 // Created:     5/25/2010 10:38:10 AM
-// Description: 
+// Description:
 //
 //---------------------------------------------------------------------------
 
@@ -14,13 +14,13 @@ IMPLEMENT_APP(DBMSFrmApp)
 
 bool DBMSFrmApp::OnInit()
 {
-    DBMSFrm* frame = new DBMSFrm(NULL);
+    DBMSFrm *frame = new DBMSFrm(NULL);
     SetTopWindow(frame);
     frame->Show();
     return true;
 }
- 
+
 int DBMSFrmApp::OnExit()
 {
-	return 0;
+    return 0;
 }

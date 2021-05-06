@@ -9,9 +9,9 @@
 ///------------------------------------------------------------------
 
 #include "DBMSFrm.h"
-#include"CreateDatabaseFrm.h"
+#include "CreateDatabaseFrm.h"
 #include "selectDbTableFrm.h"
-#include<wx/dir.h>
+#include <wx/dir.h>
 //Do not add custom headers between
 //Header Include Start and Header Include End
 //wxDev-C++ designer will remove them
@@ -24,18 +24,18 @@
 //Add Custom Events only in the appropriate block.
 //Code added in other places will be removed by wxDev-C++
 ////Event Table Start
-BEGIN_EVENT_TABLE(DBMSFrm,wxFrame)
-	////Manual Code Start
-	////Manual Code End
-	
-	EVT_CLOSE(DBMSFrm::OnClose)
-	EVT_BUTTON(ID_BTNSELECT,DBMSFrm::btnSelectClick)
-	EVT_BUTTON(ID_BTNCREATE,DBMSFrm::btnCreateClick)
+BEGIN_EVENT_TABLE(DBMSFrm, wxFrame)
+////Manual Code Start
+////Manual Code End
+
+EVT_CLOSE(DBMSFrm::OnClose)
+EVT_BUTTON(ID_BTNSELECT, DBMSFrm::btnSelectClick)
+EVT_BUTTON(ID_BTNCREATE, DBMSFrm::btnCreateClick)
 END_EVENT_TABLE()
 ////Event Table End
 
-DBMSFrm::DBMSFrm(wxWindow *parent, wxWindowID id, const wxString &title, const wxPoint &position, const wxSize& size, long style)
-: wxFrame(parent, id, title, position, size, style)
+DBMSFrm::DBMSFrm(wxWindow *parent, wxWindowID id, const wxString &title, const wxPoint &position, const wxSize &size, long style)
+	: wxFrame(parent, id, title, position, size, style)
 {
 	CreateGUIControls();
 }
@@ -58,40 +58,35 @@ void DBMSFrm::CreateGUIControls()
 
 	SetTitle(wxT("DBMS"));
 	SetIcon(wxNullIcon);
-	SetSize(8,8,320,334);
+	SetSize(8, 8, 320, 334);
 	Center();
-	
+
 	////GUI Items Creation End
-	
-	current_wd=wxGetCwd();
+
+	current_wd = wxGetCwd();
 }
 
-void DBMSFrm::OnClose(wxCloseEvent& event)
+void DBMSFrm::OnClose(wxCloseEvent &event)
 {
 	Destroy();
 }
 
-
-
-void DBMSFrm::btnCreateClick(wxCommandEvent& event)
+void DBMSFrm::btnCreateClick(wxCommandEvent &event)
 {
-    //current_wd = wxGetCwd();
+	//current_wd = wxGetCwd();
 	chdir(current_wd);
 	CreateDatabaseFrm *create = new CreateDatabaseFrm(this);
 	create->cwd(current_wd);
 	create->Show();
-//	this->Show(false);
-//	this->Hide();
+	//	this->Show(false);
+	//	this->Hide();
 }
 
-
-
-void DBMSFrm::btnSelectClick(wxCommandEvent& event)
+void DBMSFrm::btnSelectClick(wxCommandEvent &event)
 {
-    //current_wd = wxGetCwd();
+	//current_wd = wxGetCwd();
 	chdir(current_wd);
 	selectDbTableFrm *select = new selectDbTableFrm(this);
 	select->cwd(current_wd);
 	select->Show();
 }
-
