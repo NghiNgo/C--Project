@@ -21,16 +21,16 @@
 //Add Custom Events only in the appropriate block.
 //Code added in other places will be removed by wxDev-C++
 ////Event Table Start
-BEGIN_EVENT_TABLE(Untitled1Frm,wxFrame)
-	////Manual Code Start
-	////Manual Code End
-	
-	EVT_CLOSE(Untitled1Frm::OnClose)
+BEGIN_EVENT_TABLE(Untitled1Frm, wxFrame)
+////Manual Code Start
+////Manual Code End
+
+EVT_CLOSE(Untitled1Frm::OnClose)
 END_EVENT_TABLE()
 ////Event Table End
 
-Untitled1Frm::Untitled1Frm(wxWindow *parent, wxWindowID id, const wxString &title, const wxPoint &position, const wxSize& size, long style)
-: wxFrame(parent, id, title, position, size, style)
+Untitled1Frm::Untitled1Frm(wxWindow *parent, wxWindowID id, const wxString &title, const wxPoint &position, const wxSize &size, long style)
+	: wxFrame(parent, id, title, position, size, style)
 {
 	CreateGUIControls();
 }
@@ -49,13 +49,13 @@ void Untitled1Frm::CreateGUIControls()
 
 	SetTitle(wxT("Untitled1"));
 	SetIcon(wxNullIcon);
-	SetSize(8,8,320,334);
+	SetSize(8, 8, 320, 334);
 	Center();
-	
+
 	////GUI Items Creation End
 }
 
-void Untitled1Frm::OnClose(wxCloseEvent& event)
+void Untitled1Frm::OnClose(wxCloseEvent &event)
 {
 	Destroy();
 }
