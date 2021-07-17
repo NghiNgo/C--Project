@@ -137,3 +137,48 @@ void Canteen::allItems()
         cout << "Query Execution Problem!" << mysql_errno(conn) << endl;
     }
 }
+
+void Canteen::soldItems()
+{
+    qstate = mysql_query(conn, "select * from sold");
+
+    if (!qstate)
+    {
+        res = mysql_store_result(conn);
+        printf("\n------------------------------------------------\n");
+        printf("| %-20s | %-10s | %-10s\n", "ID","Item Name", "Quantity");
+        while ((row = mysql_fetch_row(res)))
+        {
+            printf("| %-20s | %-10s | %-10s\n", row[0], row[1], row[2]);
+        }
+        printf("------------------------------------------------\n");
+    }
+    else
+    {
+        cout << "Query Execution Problem!" << mysql_errno(conn) << endl;
+    }
+}
+
+bool Canteen::searchById(string id)
+{
+    string query = "SELECT id FROM items";
+    const char* q = query.c_str();
+    qstate = mysql_query(conn, q);
+    res = mysql_store_result(conn);
+
+    bool found = false;
+
+    if(!qstate)
+    {
+        while ((row = mysql_fetch_row(res)))
+        {
+            if(row[0] == id)
+            {
+                found = true;
+                break;
+            }
+        }
+    }
+
+    return found;
+}
