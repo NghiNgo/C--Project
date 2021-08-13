@@ -114,7 +114,7 @@ int main()
         DeleteTrip();
         break;
     case 9:
-    ExitProgram:
+ExitProgram:
         cout << "Program terminating. Are you sure? (y/N): ";
         cin >> exitSurity;
         if (exitSurity == 'y' || exitSurity == 'Y')
@@ -575,6 +575,114 @@ ExitMenu:
     else if (choose == 'e' || choose == 'E')
     {
         EditUser();
+    }
+    else
+    {
+        exit(0);
+    }
+}
+
+void DeleteUser()
+{
+    system("cls");
+
+    // Variables
+    char choose;
+    int itemId;
+    string items[5000];
+    int indexForId = 0;
+    bool HaveException = false, NotInDatabase = false;
+    // Variables End
+
+    cout << "Welcome To Travel Agency Management System" << endl << endl;
+    cout << "Show Users Menu" << endl << endl;
+
+
+    qstate = mysql_query(conn, "select * from travelagency_tb");
+    if (!qstate)
+    {
+        res = mysql_store_result(conn);
+        printf("-----------------------------------------------------------------------------------------------------------------\n");
+        printf("| %-10s | %-25s | %-25s | %-40s |\n", "Column ID", "User Name", "Trip Date", "Trip Plan");
+        while ((row = mysql_fetch_row(res)))
+        {
+            printf("| %-10s | %-25s | %-25s | %-40s |\n", row[0], row[1], row[5], row[6]);
+            items[indexForId] = row[0];
+            indexForId++;
+        }
+        printf("-----------------------------------------------------------------------------------------------------------------\n");
+    }
+    else
+    {
+        cout << "Query Execution Problem!" << mysql_errno(conn) << endl;
+    }
+
+    try
+    {
+        cout << endl;
+        cout << "Enter Item Column ID: ";
+        cin >> itemId;
+        cout << endl;
+    }
+    catch (exception e)
+    {
+        cout << "Please Enter a valid NUMBER." << endl;
+        HaveException = true;
+        goto ExitMenu;
+    }
+
+    if (HaveException == false)
+    {
+        stringstream streamid;
+        string strid;
+        streamid << itemId;
+        streamid >> strid;
+
+        for (int i = 0; i < indexForId; i++)
+        {
+            if (strid != items[i])
+            {
+                NotInDatabase = true;
+            } else
+            {
+                NotInDatabase = false;
+                break;
+            }
+        }
+
+        if (NotInDatabase == false)
+        {
+            string delete_query = "delete from travelagency_tb where t_id = '" + strid + "'";
+            const char* qd = delete_query.c_str();
+            qstate = mysql_query(conn, qd);
+
+            if (!qstate)
+            {
+                cout << "Successfully Deleted From Database." << endl;
+            }
+            else
+            {
+                cout << "Failed To Delete!" << mysql_errno(conn) << endl;
+            }
+
+        }
+        else
+        {
+            cout << "Item Not Found in database." << endl;
+        }
+    }
+
+    // Exit Code
+ExitMenu:
+    cout << "Press 'm' to Menu, 'd' to delete another record and any other key to Exit: ";
+    cin >> choose;
+    if (choose == 'm' || choose == 'M')
+    {
+        main();
+    }
+    else if (choose == 'd' || choose == 'D')
+    {
+        DeleteUser();
     }
     else
     {
