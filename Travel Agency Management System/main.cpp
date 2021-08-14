@@ -689,3 +689,319 @@ ExitMenu:
         exit(0);
     }
 }
+
+void AddTrip()
+{
+    // Initial Load
+    system("cls");
+    // Initial Load End
+
+    // Variables
+    string tripName = "";
+    char choose;
+    // Variables End
+
+    cout << "Welcome To Travel Agency Management System" << endl << endl;
+    cout << "Add Trip Menu" << endl << endl;
+
+    cin.ignore(1, '\n');
+    cout << "Enter Trip Name: ";
+    getline(cin, tripName);
+
+    string insert_query = "insert into travelagencytrips_tb (t_trip) values ('" + tripName + "')";
+
+    const char* q = insert_query.c_str(); // c_str converts string to constant char and this is required
+
+    qstate = mysql_query(conn, q);
+
+    if (!qstate)
+    {
+        cout << endl << "Successfully added in database." << endl;
+    }
+    else
+    {
+        cout << "Query Execution Problem!" << mysql_errno(conn) << endl;
+    }
+
+    qstate = mysql_query(conn, "select * from travelagencytrips_tb");
+    if (!qstate)
+    {
+        res = mysql_store_result(conn);
+        printf("---------------------------------------------------------\n");
+        printf("| %-10s | %-40s |\n", "Trip Id", "Trip Name");
+        while ((row = mysql_fetch_row(res)))
+        {
+            printf("| %-10s | %-40s |\n", row[0], row[1]);
+        }
+        printf("---------------------------------------------------------\n");
+    }
+    else
+    {
+        cout << "Query Execution Problem!" << mysql_errno(conn) << endl;
+    }
+
+    // Exit Code
+    cout << "Press 'm' to Menu and 'a' to Insert Again Or Any Other key to exit: ";
+    cin >> choose;
+    if (choose == 'm' || choose == 'M')
+    {
+        main();
+    }
+    else if (choose == 'a' || choose == 'A')
+    {
+        AddTrip();
+    }
+    else
+    {
+        exit(0);
+    }
+}
+
+void EditTrip()
+{
+    system("cls");
+
+    // Variables
+    string tripName = "";
+    string items[5000];
+    char choose;
+    int itemId;
+    bool HaveException = false;
+    bool NotInDatabase = false;
+    int indexForId = 0;
+
+    // Store Variables
+    string storeColumnId = "";
+    string storeTripName = "";
+    // Variables End
+
+    cout << "Welcome To Student Fee Inquiry Program" << endl << endl;
+    cout << "Edit Trip Record" << endl;
+
+
+    qstate = mysql_query(conn, "select * from travelagencytrips_tb");
+    if (!qstate)
+    {
+        res = mysql_store_result(conn);
+        printf("---------------------------------------------------------\n");
+        printf("| %-10s | %-40s |\n", "Trip Id", "Trip Name");
+        while ((row = mysql_fetch_row(res)))
+        {
+            printf("| %-10s | %-40s |\n", row[0], row[1]);
+        }
+        printf("---------------------------------------------------------\n");
+    }
+    else
+    {
+        cout << "Query Execution Problem!" << mysql_errno(conn) << endl;
+    }
+
+    try
+    {
+        cout << endl;
+        cout << "Enter Item Column ID: ";
+        cin >> itemId;
+        cout << endl;
+    }
+    catch (exception e)
+    {
+        cout << "Please Enter a valid NUMBER." << endl;
+        HaveException = true;
+        goto ExitMenu;
+    }
+
+    if (HaveException == false)
+    {
+        stringstream streamid;
+        string strid;
+        streamid << itemId;
+        streamid >> strid;
+
+        for (int i = 0; i < indexForId; i++)
+        {
+            if (strid != items[i])
+            {
+                NotInDatabase = true;
+            } else
+            {
+                NotInDatabase = false;
+                break;
+            }
+        }
+
+        if (NotInDatabase == false)
+        {
+            string findbyid_query = "select * from travelagencytrips_tb where t_id = '" + strid + "'";
+            const char* qi = findbyid_query.c_str();
+            qstate = mysql_query(conn, qi);
+
+            if (!qstate)
+            {
+                cout << endl;
+                res = mysql_store_result(conn);
+                printf("---------------------------------------------------------\n");
+                printf("| %-10s | %-40s |\n", "Trip Id", "Trip Name");
+                while ((row = mysql_fetch_row(res)))
+                {
+                    printf("| %-10s | %-40s |\n", row[0], row[1]);
+                }
+                printf("---------------------------------------------------------\n");
+            }
+            else
+            {
+                cout << "Query Execution Problem!" << mysql_errno(conn) << endl;
+            }
+
+            cin.ignore(1, '\n');
+            cout << "Enter Trip Name (xN to not change): ";
+            getline(cin, tripName);
+            if (tripName == "xN")
+            {
+                tripName = storeTripName;
+            }
+
+            string update_query = "update travelagencytrips_tb set t_trip = '" + tripName + "' where t_id = '" + strid + "'";
+            const char* qu = update_query.c_str();
+            qstate = mysql_query(conn, qu);
+
+            if (!qstate)
+            {
+                cout << endl << "Successfully Saved In Database." << endl;
+            }
+            else
+            {
+                cout << "Failed To Update!" << mysql_errno(conn) << endl;
+            }
+
+        }
+        else
+        {
+            cout << "Item Not Found in database." << endl;
+        }
+    }
+
+ExitMenu:
+    cout << "Press 'm' to Menu, 'e' to edit another item and any other key to Exit: ";
+    cin >> choose;
+    if (choose == 'm' || choose == 'M')
+    {
+        main();
+    }
+    else if (choose == 'e' || choose == 'E')
+    {
+        EditTrip();
+    }
+    else
+    {
+        exit(0);
+    }
+}
+
+void DeleteTrip()
+{
+    system("cls");
+
+    // Variables
+    char choose;
+    int itemId;
+    string items[5000];
+    int indexForId = 0;
+    bool HaveException = false, NotInDatabase = false;
+    // Variables End
+
+    cout << "Welcome To Travel Agency Management System" << endl << endl;
+    cout << "Delete User Menu" << endl << endl;
+
+
+    qstate = mysql_query(conn, "select * from travelagencytrips_tb");
+    if (!qstate)
+    {
+        res = mysql_store_result(conn);
+        printf("---------------------------------------------------------\n");
+        printf("| %-10s | %-40s |\n", "Trip ID", "Trip Name");
+        while ((row = mysql_fetch_row(res)))
+        {
+            printf("| %-10s | %-40s |\n", row[0], row[1]);
+            items[indexForId] = row[0];
+            indexForId++;
+        }
+        printf("---------------------------------------------------------\n");
+    }
+    else
+    {
+        cout << "Query Execution Problem!" << mysql_errno(conn) << endl;
+    }
+
+    try
+    {
+        cout << endl;
+        cout << "Enter Item Column ID: ";
+        cin >> itemId;
+        cout << endl;
+    }
+    catch (exception e)
+    {
+        cout << "Please Enter a valid NUMBER." << endl;
+        HaveException = true;
+        goto ExitMenu;
+    }
+
+    if (HaveException == false)
+    {
+        stringstream streamid;
+        string strid;
+        streamid << itemId;
+        streamid >> strid;
+
+        for (int i = 0; i < indexForId; i++)
+        {
+            if (strid != items[i])
+            {
+                NotInDatabase = true;
+            } else
+            {
+                NotInDatabase = false;
+                break;
+            }
+        }
+
+        if (NotInDatabase == false)
+        {
+            string delete_query = "delete from travelagencytrips_tb where t_id = '" + strid + "'";
+            const char* qd = delete_query.c_str();
+            qstate = mysql_query(conn, qd);
+
+            if (!qstate)
+            {
+                cout << "Successfully Deleted From Database." << endl;
+            }
+            else
+            {
+                cout << "Failed To Delete!" << mysql_errno(conn) << endl;
+            }
+
+        }
+        else
+        {
+            cout << "Item Not Found in database." << endl;
+        }
+    }
+
+    // Exit Code
+ExitMenu:
+    cout << "Press 'm' to Menu, 'd' to delete another record and any other key to Exit: ";
+    cin >> choose;
+    if (choose == 'm' || choose == 'M')
+    {
+        main();
+    }
+    else if (choose == 'd' || choose == 'D')
+    {
+        DeleteUser();
+    }
+    else
+    {
+        exit(0);
+    }
+}
+
