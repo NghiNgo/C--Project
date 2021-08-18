@@ -126,3 +126,92 @@ ExitProgram:
     }
     return 0;
 }
+
+// Functions
+void ReserveSeat()
+{
+    // Initial Load
+    system("cls");
+    // Initial Load End
+
+    // Variables
+    string userFlightNo = "";
+    string userName = "";
+    string userPhone = "";
+    string userPassportNo = "";
+    string userTicket = "";
+    string userAddress = "";
+    char choose;
+    // Variables End
+
+    // Store Variables
+    string store2dArray[500][500];
+    int storeIndex1 = 0, storeIndex2 = 0;
+    // Store Variables End
+
+
+    cout << "Welcome To Airlines Reservation System" << endl << endl;
+    cout << "Reserve Seat Menu" << endl << endl;
+
+    cin.ignore(1, '\n');
+    cout << "Enter User Name: ";
+    getline(cin, userName);
+    cout << "Enter User Phone No: ";
+    getline(cin, userPhone);
+    cout << "Enter User Passport: ";
+    getline(cin, userPassportNo);
+    cout << "Enter User Ticket: ";
+    getline(cin, userTicket);
+    cout << "Enter User Address: ";
+    getline(cin, userAddress);
+
+    qstate = mysql_query(conn, "select * from flightdetails_tb where f_available = 'A'");
+    if (!qstate)
+    {
+        res = mysql_store_result(conn);
+        printf("--------------------------------------------------------------------------------------------------------------------\n");
+        printf("| %-20s | %-20s | %-20s | %-20s | %-20s |\n", "Flight No", "From", "Destination", "Time", "Amount");
+        while ((row = mysql_fetch_row(res)))
+        {
+            printf("| %-20s | %-20s | %-20s | %-20s | %-20s |\n", row[1], row[3], row[4], row[5], row[6]);
+        }
+        printf("--------------------------------------------------------------------------------------------------------------------\n");
+    }
+    else
+    {
+        cout << "Query Execution Problem!" << mysql_errno(conn) << endl;
+    }
+    cout << "Enter Flight No: ";
+    getline(cin, userFlightNo);
+
+    string insert_query = "insert into userreservation_tb (u_name, u_phone, u_passportno, u_ticket, u_flightno, u_address) values ('" + userName + "','" + userPhone + "','" + userPassportNo + "','" + userTicket + "','" + userFlightNo + "','" + userAddress + "')";
+
+    const char* q = insert_query.c_str(); // c_str converts string to constant char and this is required
+
+    qstate = mysql_query(conn, q);
+
+    if (!qstate)
+    {
+        cout << endl << "Successfully added in database." << endl;
+    }
+    else
+    {
+        cout << "Query Execution Problem!" << mysql_errno(conn) << endl;
+    }
+
+    // Exit Code
+    cout << "Press 'm' to Menu and 'a' to Reserve Again Or Any Other key to exit: ";
+    cin >> choose;
+    if (choose == 'm' || choose == 'M')
+    {
+        main();
+    }
+    else if (choose == 'a' || choose == 'A')
+    {
+        ReserveSeat();
+    }
+    else
+    {
+        exit(0);
+    }
+}
