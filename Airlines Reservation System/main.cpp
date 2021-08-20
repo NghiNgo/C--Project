@@ -215,3 +215,58 @@ void ReserveSeat()
         exit(0);
     }
 }
+
+void UserTicket()
+{
+    // Initial Load
+    system("cls");
+    // Initial Load End
+
+    // Variables
+    string input = "";
+    char choose;
+    // Variables End
+
+    cout << "Welcome To Airlines Reservation System" << endl << endl;
+    cout << "User Ticket Menu" << endl << endl;
+
+    cin.ignore(1, '\n');
+    cout << "Enter User Name: ";
+    getline(cin, input);
+    string findbyname_query = "select * from userreservation_tb where u_name like '%" + input + "%'";
+    const char* qn = findbyname_query.c_str();
+    qstate = mysql_query(conn, qn);
+
+    cout << endl;
+    cout << "Showing Ticket of " << input << endl << endl;
+    if (!qstate)
+    {
+        res = mysql_store_result(conn);
+        while ((row = mysql_fetch_row(res)))
+        {
+            cout << "Ticket No.: " << row[4] << "\nUser Name: " << row[1] << "\nUser Phone No.: " << row[2] << "\nUser Passport: " << row[3] << "\nFlight No.: " << row[5] << "\nUser Address: " << row[6] << endl << endl;
+        }
+    }
+    else
+    {
+        cout << "Query Execution Problem!" << mysql_errno(conn) << endl;
+    }
+
+    // Exit Code
+ExitMenu:
+    cout << "Press 'm' to Menu, 'a' to Search again and any other key to Exit: ";
+    cin >> choose;
+    if (choose == 'm' || choose == 'M')
+    {
+        main();
+    }
+    else if (choose == 'a' || choose == 'A')
+    {
+        UserTicket();
+    }
+    else
+    {
+        exit(0);
+    }
+}
+
