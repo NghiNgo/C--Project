@@ -270,3 +270,142 @@ ExitMenu:
     }
 }
 
+void FlightSchedule()
+{
+    // Initial Load
+    system("cls");
+    // Initial Load End
+
+    // Variables
+    char choose;
+    // Variables End
+
+    cout << "Welcome To Airlines Reservation System" << endl << endl;
+    cout << "Flight Schedule" << endl << endl;
+
+    qstate = mysql_query(conn, "select * from flightdetails_tb");
+    if (!qstate)
+    {
+        res = mysql_store_result(conn);
+        printf("-------------------------------------------------------------------------------------------\n");
+        printf("| %-15s | %-15s | %-15s | %-15s | %-15s |\n", "Flight No." , "From", "Destination", "Leave", "Arrive");
+        while ((row = mysql_fetch_row(res)))
+        {
+            printf("| %-15s | %-15s | %-15s | %-15s | %-15s |\n", row[1], row[3], row[4], row[7], row[8]);
+        }
+        printf("-------------------------------------------------------------------------------------------\n");
+    }
+    else
+    {
+        cout << "Query Execution Problem!" << mysql_errno(conn) << endl;
+    }
+
+    // Exit Code
+ExitMenu:
+    cout << "Press 'm' to Menu and any other key to Exit: ";
+    cin >> choose;
+    if (choose == 'm' || choose == 'M')
+    {
+        main();
+    }
+    else
+    {
+        exit(0);
+    }
+}
+
+void DisplayPassenger()
+{
+    // Initial Load
+    system("cls");
+    // Initial Load End
+
+    // Variables
+    char choose;
+    // Variables End
+
+    cout << "Welcome To Airlines Reservation System" << endl << endl;
+    cout << "Display Passenger Menu" << endl << endl;
+
+    qstate = mysql_query(conn, "select * from userreservation_tb");
+    if (!qstate)
+    {
+        res = mysql_store_result(conn);
+        printf("------------------------------------------------------------------------------------------------------------------\n");
+        printf("| %-20s | %-15s | %-15s | %-15s | %-15s | %-15s |\n", "User Name", "Phone No.", "Passport No.", "Ticket No.", "Flight No.", "Address");
+        while ((row = mysql_fetch_row(res)))
+        {
+            printf("| %-20s | %-15s | %-15s | %-15s | %-15s | %-15s |\n", row[1], row[2], row[3], row[4], row[5], row[6]);
+        }
+        printf("------------------------------------------------------------------------------------------------------------------\n");
+    }
+    else
+    {
+        cout << "Query Execution Problem!" << mysql_errno(conn) << endl;
+    }
+
+    // Exit Code
+ExitMenu:
+    cout << "Press 'm' to Menu and any other key to Exit: ";
+    cin >> choose;
+    if (choose == 'm' || choose == 'M')
+    {
+        main();
+    }
+    else
+    {
+        exit(0);
+    }
+}
+
+void FlightDetails()
+{
+    // Initial Load
+    system("cls");
+    system("title Airlines Reservation System Program");
+    system("color 0f");
+    // Initial Load End
+
+    // Call Methods
+    db_response::ConnectionFunction();
+    // Call Methods End
+
+    // Variables
+    int chooseOneFromMenu = 0;
+    // Variables End
+
+    cout << "Welcome To Airlines Reservation System" << endl << endl;
+    cout << "Airlines Reservation System Menu" << endl;
+    cout << "1. Add Flight." << endl;
+    cout << "2. Edit Flight." << endl;
+    cout << "3. Delete Flight." << endl;
+    cout << "4. Flight Leave And Arrive." << endl;
+    cout << "5. Back To Menu." << endl;
+    cout << "Choose One: ";
+    cin >> chooseOneFromMenu;
+
+    switch (chooseOneFromMenu)
+    {
+    case 1:
+        AddNewFlight();
+        break;
+    case 2:
+        EditFlight();
+        break;
+    case 3:
+        DeleteFlight();
+        break;
+    case 4:
+        FlightLeaveArrive();
+        break;
+    case 5:
+        main();
+        break;
+    default:
+        cout << "Please choose between The Given Numbers. Press Enter To Continue...";
+        getch();
+        system("cls");
+        FlightDetails();
+        break;
+    }
+}
