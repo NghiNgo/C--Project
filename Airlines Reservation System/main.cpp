@@ -409,3 +409,264 @@ void FlightDetails()
         break;
     }
 }
+
+void AddNewFlight()
+{
+    // Initial Load
+    system("cls");
+    // Initial Load End
+
+    // Variables
+    string flightNo = "";
+    string flightName = "";
+    string flightFrom = "";
+    string flightDestination = "";
+    string flightTime = "";
+    string flightAmount = "";
+    string flightAvailability = "";
+    char choose;
+    // Variables End
+
+    // Store Variables
+    // Store Variables End
+
+    cout << "Welcome To Airlines Reservation System" << endl << endl;
+    cout << "Add New Flight Menu" << endl << endl;
+
+    cin.ignore(1, '\n');
+    cout << "Enter Flight No: ";
+    getline(cin, flightNo);
+    cout << "Enter Flight Name: ";
+    getline(cin, flightName);
+    cout << "Enter Flight From: ";
+    getline(cin, flightFrom);
+    cout << "Enter User Destination: ";
+    getline(cin, flightDestination);
+    cout << "Enter Flight Time: ";
+    getline(cin, flightTime);
+    cout << "Enter Amount: ";
+    getline(cin, flightAmount);
+    cout << "Enter Flight Availability (A (Available) / N (Not Available)): ";
+    getline(cin, flightAvailability);
+
+    string insert_query = "insert into flightdetails_tb (f_no, f_name, f_from, f_destination, f_time, f_amount, f_available) values ('" + flightNo + "','" + flightName + "','" + flightFrom + "','" + flightDestination + "','" + flightTime + "','" + flightAmount + "','" + flightAvailability + "')";
+
+    const char* q = insert_query.c_str(); // c_str converts string to constant char and this is required
+
+    qstate = mysql_query(conn, q);
+
+    if (!qstate)
+    {
+        cout << endl << "Successfully added in database." << endl;
+    }
+    else
+    {
+        cout << "Query Execution Problem!" << mysql_errno(conn) << endl;
+    }
+
+    // Exit Code
+    cout << "Press 'm' to Flight Details Menu and 'a' to Insert Again Or Any Other key to exit: ";
+    cin >> choose;
+    if (choose == 'm' || choose == 'M')
+    {
+        FlightDetails();
+    }
+    else if (choose == 'a' || choose == 'A')
+    {
+        AddNewFlight();
+    }
+    else
+    {
+        exit(0);
+    }
+}
+
+void EditFlight()
+{
+    system("cls");
+
+    // Variables
+    string flightNo = "";
+    string flightName = "";
+    string flightFrom = "";
+    string flightDestination = "";
+    string flightTime = "";
+    string flightAmount = "";
+    string items[5000];
+    char choose;
+    int itemId;
+    bool HaveException = false;
+    bool NotInDatabase = false;
+    int indexForId = 0;
+
+    // Store Variables
+    string storeColumnId = "";
+    string storeFlightNo = "";
+    string storeFlightName = "";
+    string storeFlightFrom = "";
+    string storeFlightDestination = "";
+    string storeFlightTime = "";
+    string storeFlightAmount = "";
+    string storeUserTripPlan2d[500][500];
+    int storeIndex1 = 0, storeIndex2 = 0;
+    // Variables End
+
+    cout << "Welcome To Airlines Reservation System" << endl << endl;
+    cout << "Edit Flight Record" << endl;
+
+
+    qstate = mysql_query(conn, "select * from flightdetails_tb");
+    if (!qstate)
+    {
+        res = mysql_store_result(conn);
+        printf("--------------------------------------------------------------------------------------------------------\n");
+        printf("| %-10s | %-15s | %-15s | %-15s | %-15s | %-15s |\n", "Column ID", "Flight No.", "Flight Name", "From", "Destination", "Time");
+        while ((row = mysql_fetch_row(res)))
+        {
+            printf("| %-10s | %-15s | %-15s | %-15s | %-15s | %-15s |\n", row[0], row[1], row[2], row[3], row[4], row[5]);
+            items[indexForId] = row[0];
+            indexForId++;
+        }
+        printf("--------------------------------------------------------------------------------------------------------\n");
+    }
+    else
+    {
+        cout << "Query Execution Problem!" << mysql_errno(conn) << endl;
+    }
+
+    try
+    {
+        cout << endl;
+        cout << "Enter Item Column ID: ";
+        cin >> itemId;
+        cout << endl;
+    }
+    catch (exception e)
+    {
+        cout << "Please Enter a valid NUMBER." << endl;
+        HaveException = true;
+        goto ExitMenu;
+    }
+
+    if (HaveException == false)
+    {
+        stringstream streamid;
+        string strid;
+        streamid << itemId;
+        streamid >> strid;
+
+        for (int i = 0; i < indexForId; i++)
+        {
+            if (strid != items[i])
+            {
+                NotInDatabase = true;
+            } else
+            {
+                NotInDatabase = false;
+                break;
+            }
+        }
+
+        if (NotInDatabase == false)
+        {
+            string findbyid_query = "select * from flightdetails_tb where f_id = '" + strid + "'";
+            const char* qi = findbyid_query.c_str();
+            qstate = mysql_query(conn, qi);
+
+            if (!qstate)
+            {
+                cout << endl;
+
+                res = mysql_store_result(conn);
+                while ((row = mysql_fetch_row(res)))
+                {
+                    cout << "Flight No.: " << row[1] << "\nFlight Name: " << row[2] << "\nFlight From: " << row[3] << "\nFlight Destination: " << row[4] << "\nFlight Time: " << row[5] << "\nFlight Amount: " << row[6] << endl << endl;
+                    storeColumnId = row[0];
+                    storeFlightNo = row[1];
+                    storeFlightName = row[2];
+                    storeFlightFrom = row[3];
+                    storeFlightDestination = row[4];
+                    storeFlightTime = row[5];
+                    storeFlightAmount = row[6];
+                }
+            }
+            else
+            {
+                cout << "Query Execution Problem!" << mysql_errno(conn) << endl;
+            }
+
+            cin.ignore(1, '\n');
+            cout << "Enter Flight No. (X to not change): ";
+            getline(cin, flightNo);
+            if (flightNo == "X")
+            {
+                flightNo = storeFlightNo;
+            }
+            cout << "Enter Flight Name (X to not change): ";
+            getline(cin, flightName);
+            if (flightName == "X")
+            {
+                flightName = storeFlightName;
+            }
+            cout << "Enter From (X to not change): ";
+            getline(cin, flightFrom);
+            if (flightFrom == "X")
+            {
+                flightFrom = storeFlightFrom;
+            }
+            cout << "Enter Destination (X to not change): ";
+            getline(cin, flightDestination);
+            if (flightDestination == "X")
+            {
+                flightDestination = storeFlightDestination;
+            }
+            cout << "Enter Time (X to not change): ";
+            cin >> flightTime;
+            if (flightTime == "X")
+            {
+                flightTime = storeFlightTime;
+            }
+            cout << "Enter Amount (X to not change): ";
+            cin >> flightAmount;
+            if (flightAmount == "X")
+            {
+                flightAmount = storeFlightAmount;
+            }
+
+            string update_query = "update flightdetails_tb set f_no = '" + flightNo + "', f_name = '" + flightName + "', f_from = '" + flightFrom + "', f_destination = '" + flightDestination + "', f_time = '" + flightTime + "', f_amount = '" + flightAmount + "' where f_id = '" + strid + "'";
+            const char* qu = update_query.c_str();
+            qstate = mysql_query(conn, qu);
+
+            if (!qstate)
+            {
+                cout << endl << "Successfully Saved In Database." << endl;
+            }
+            else
+            {
+                cout << "Failed To Update!" << mysql_errno(conn) << endl;
+            }
+
+        }
+        else
+        {
+            cout << "Item Not Found in database." << endl;
+        }
+    }
+
+    // Exit Code
+ExitMenu:
+    cout << "Press 'm' to Menu, 'e' to edit another item and any other key to Exit: ";
+    cin >> choose;
+    if (choose == 'm' || choose == 'M')
+    {
+        FlightDetails();
+    }
+    else if (choose == 'e' || choose == 'E')
+    {
+        EditFlight();
+    }
+    else
+    {
+        exit(0);
+    }
+}
