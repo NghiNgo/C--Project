@@ -778,3 +778,161 @@ ExitMenu:
         exit(0);
     }
 }
+
+void FlightLeaveArrive()
+{
+    system("cls");
+
+    // Variables
+    string flightLeave = "";
+    string flightArrive = "";
+    string flightAvailable = "";
+    string items[5000];
+    char choose;
+    int itemId;
+    bool HaveException = false;
+    bool NotInDatabase = false;
+    int indexForId = 0;
+
+    // Store Variables
+    string storeFlightLeave = "";
+    string storeFlightArrive = "";
+    string storeFlightAvailable = "";
+    // Variables End
+
+    cout << "Welcome To Airlines Reservation System" << endl << endl;
+    cout << "Flight Leave And Arrive Record" << endl;
+
+
+    qstate = mysql_query(conn, "select * from flightdetails_tb");
+    if (!qstate)
+    {
+        res = mysql_store_result(conn);
+        printf("--------------------------------------------------------------------------------------------------------\n");
+        printf("| %-10s | %-15s | %-15s | %-15s | %-15s | %-15s |\n", "Column ID", "Flight No", "From", "Destination", "Time", "Amount");
+        while ((row = mysql_fetch_row(res)))
+        {
+            printf("| %-10s | %-15s | %-15s | %-15s | %-15s | %-15s |\n", row[0], row[1], row[3], row[4], row[5], row[6]);
+        }
+        printf("--------------------------------------------------------------------------------------------------------\n");
+    }
+    else
+    {
+        cout << "Query Execution Problem!" << mysql_errno(conn) << endl;
+    }
+
+    try
+    {
+        cout << endl;
+        cout << "Enter Item Column ID: ";
+        cin >> itemId;
+        cout << endl;
+    }
+    catch (exception e)
+    {
+        cout << "Please Enter a valid NUMBER." << endl;
+        HaveException = true;
+        goto ExitMenu;
+    }
+
+    if (HaveException == false)
+    {
+        stringstream streamid;
+        string strid;
+        streamid << itemId;
+        streamid >> strid;
+
+        for (int i = 0; i < indexForId; i++)
+        {
+            if (strid != items[i])
+            {
+                NotInDatabase = true;
+            } else
+            {
+                NotInDatabase = false;
+                break;
+            }
+        }
+
+        if (NotInDatabase == false)
+        {
+            string findbyid_query = "select * from flightdetails_tb where f_id = '" + strid + "'";
+            const char* qi = findbyid_query.c_str();
+            qstate = mysql_query(conn, qi);
+
+            if (!qstate)
+            {
+                cout << endl;
+
+                res = mysql_store_result(conn);
+                while ((row = mysql_fetch_row(res)))
+                {
+                    cout << "Flight No.: " << row[1] << "\nFlight From: " << row[3] << "\nFlight Destination: " << row[4] << "\nFlight Time: " << row[5] << endl << endl;
+                    storeFlightLeave = row[7];
+                    storeFlightArrive = row[8];
+                    storeFlightAvailable = row[9];
+                }
+            }
+            else
+            {
+                cout << "Query Execution Problem!" << mysql_errno(conn) << endl;
+            }
+
+            cin.ignore(1, '\n');
+            cout << "Enter User Flight Leave (X to not change): ";
+            getline(cin, flightLeave);
+            if (flightLeave == "X")
+            {
+                flightLeave = storeFlightLeave;
+            }
+
+            cout << "Enter User Flight Arrive (X to not change): ";
+            getline(cin, flightArrive);
+            if (flightArrive == "X")
+            {
+                flightArrive = storeFlightArrive;
+            }
+
+            cout << "Enter User Flight Available (A/U) (X to not change): ";
+            getline(cin, flightAvailable);
+            if (flightAvailable == "X")
+            {
+                flightAvailable = storeFlightAvailable;
+            }
+
+            string update_query = "update flightdetails_tb set f_leave = '" + flightLeave + "', f_arrive = '" + flightArrive + "', f_available = '" + flightAvailable + "' where f_id = '" + strid + "'";
+            const char* qu = update_query.c_str();
+            qstate = mysql_query(conn, qu);
+
+            if (!qstate)
+            {
+                cout << endl << "Successfully Saved In Database." << endl;
+            }
+            else
+            {
+                cout << "Failed To Update!" << mysql_errno(conn) << endl;
+            }
+
+        }
+        else
+        {
+            cout << "Item Not Found in database." << endl;
+        }
+    }
+
+ExitMenu:
+    cout << "Press 'm' to Flight Details Menu, 'e' to edit another item and any other key to Exit: ";
+    cin >> choose;
+    if (choose == 'm' || choose == 'M')
+    {
+        FlightDetails();
+    }
+    else if (choose == 'e' || choose == 'E')
+    {
+        FlightLeaveArrive();
+    }
+    else
+    {
+        exit(0);
+    }
+}
