@@ -146,3 +146,157 @@ ExitProgram:
     }
     return 0;
 }
+
+// Function Implementation
+void BookTicket() {
+
+    system("cls");
+
+    // Variables
+    char choose;
+    string c_name = "";
+    string c_phone = "";
+    string c_seat = "";
+    string getId = "";
+    char chooseEditOrBuy;
+    int itemIndex = 0;
+    float totalPrice = 0.0;
+    string totPrice = "";
+    bool purchase, itemFalse = false, exitcode = false;
+
+    string storeId[5000];
+    string storeid = "";
+    string storename = "";
+    string storegenre = "";
+    string storeformat = "";
+    string storeshowDate = "";
+    string storeshowTime = "";
+    string storeticketPrice = "";
+    string storeseat = "";
+    int storeIndex = 0, storeIndexN = 0;
+    // Variables End
+
+    Welcome();
+    qstate = mysql_query(conn, "select * from movie_tb");
+    if (!qstate)
+    {
+
+        res = mysql_store_result(conn);
+
+        printf("---------------------------------------------------------------------------------------------------\n");
+        printf("| %-10s | %-15s | %-7s | %-15s | %-15s | %-10s | %-5s |\n", "Column Id", "Name", "Format", "Show Date", "Show Time", "Price", "Seat");
+        while ((row = mysql_fetch_row(res)))
+        {
+
+            if (atoi(row[7]) > 0)
+            {
+                printf("| %-10s | %-15s | %-7s | %-15s | %-15s | %-10s | %-5s |\n", row[0], row[1], row[3], row[4], row[5], row[6], row[7]);
+                storeId[storeIndex] = row[0];
+                storeIndex++;
+            }
+
+        }
+        printf("---------------------------------------------------------------------------------------------------\n");
+    }
+    else
+    {
+        cout << "Query Execution Problem!" << mysql_errno(conn) << endl;
+    }
+
+    itemFalse = true;
+    for (;;) {
+        cout << "Enter a Movie ID's (q to exit): ";
+        cin >> getId;
+
+        if (getId == "q") {
+            exitcode = true;
+            break;
+        }
+
+        for (int i = 0; i < storeIndex; i++)
+        {
+            if (getId == storeId[i])
+            {
+                itemFalse = false;
+                break;
+            }
+        }
+        if (itemFalse) {
+            cout << "Enter a valid number." << endl;
+            itemFalse = true;
+        } else {
+            break;
+        }
+    }
+
+    if (!exitcode) {
+        cout << "Enter Customer Name: "; cin >> c_name;
+        cout << "Enter Customer Phone: "; cin >> c_phone;
+        cout << "Book Seat: "; cin >> c_seat;
+
+        string selectMovie = "select * from movie_tb where m_id = '" + getId + "'";
+        const char* qn = selectMovie.c_str();
+        qstate = mysql_query(conn, qn);
+
+        if (!qstate)
+        {
+
+            res = mysql_store_result(conn);
+
+            printf("--------------------------------------------------------------------\n");
+            printf("| %-10s | %-15s | %-15s | %-15s |\n", "Column Id", "Name", "Format", "Price");
+            while ((row = mysql_fetch_row(res)))
+            {
+                if (atoi(row[7]) > 0)
+                {
+                    printf("| %-10s | %-15s | %-15s | %-15s |\n", row[0], row[1], row[3], row[6]);
+                    storeid = row[0];
+                    storename = row[1];
+                    storegenre = row[2];
+                    storeformat = row[3];
+                    storeshowDate = row[4];
+                    storeshowTime = row[5];
+                    storeticketPrice = row[6];
+                    storeseat = row[7];
+                }
+
+            }
+            printf("--------------------------------------------------------------------\n");
+        }
+        else
+        {
+            cout << "Query Execution Problem!" << mysql_errno(conn) << endl;
+        }
+
+        string updatQuery = "update movie_tb set m_seat = m_seat - '" + c_seat + "' where m_id = '" + getId + "'";
+        const char* un = updatQuery.c_str();
+        qstate = mysql_query(conn, un);
+
+        totalPrice = strtof((storeticketPrice).c_str(), 0) * strtof((c_seat).c_str(), 0);
+        stringstream tPrice;
+        tPrice << totalPrice;
+        tPrice >> totPrice;
+
+        string insert_query = "insert into customer_tb (name, phone, movie, format, seat, price, showdate, showtime) values ('" + c_name + "','" + c_phone + "','" + storename + "', '" + storeformat + "', '" + c_seat + "', '" + totPrice + "', '" + storeshowDate + "', '" + storeshowTime + "')";
+        const char* in = insert_query.c_str();
+        qstate = mysql_query(conn, in);
+
+        if (!qstate)
+        {
+            cout << endl << "Purchase Successfully Done." << endl;
+            cout << endl << "Total Price: " << totalPrice << endl;
+        }
+    }
+
+    // Exit Code
+    cout << endl << "Press 'm' to Menu and any other key to Exit: ";
+    cin >> choose;
+    if (choose == 'm' || choose == 'M')
+    {
+        main();
+    }
+    else
+    {
+        exit(0);
+    }
+}
