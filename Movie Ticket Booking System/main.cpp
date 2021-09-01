@@ -300,3 +300,58 @@ void BookTicket() {
         exit(0);
     }
 }
+
+void ShowMyTicket() {
+
+    system("cls");
+
+    // Variables
+    char choose;
+    string input;
+    // Variables End
+
+    Welcome();
+    cin.ignore(1, '\n');
+    cout << "Enter Your Id Or Name: ";
+    getline(cin, input);
+    string findbyname_query = "select * from  customer_tb where id = '" + input + "' or name = '" + input + "'";
+    const char* qn = findbyname_query.c_str();
+    qstate = mysql_query(conn, qn);
+
+    cout << endl;
+    int c = 0;
+    if (!qstate)
+    {
+        res = mysql_store_result(conn);
+        while ((row = mysql_fetch_row(res)))
+        {
+            cout << "ID: " << row[0] << "\nName: " << row[1] << "\nPhone: " << row[2] << "\nMovie: " << row[3] << "\nFormat: " << row[4] << "\nSeat: " << row[5] << "\nPrice: " << row[6] << "\nShow Date: " << row[7] << "\nShow Time: " << row[8] << endl << endl;
+            c++;
+        }
+
+        if (c == 0) {
+            cout << "No ticket with this input" << endl;
+        }
+    }
+    else
+    {
+        cout << "Query Execution Problem!" << mysql_errno(conn) << endl;
+    }
+
+ExitMenu:
+    cout << "Press 'm' to Menu, 'a' to Search again and any other key to Exit: ";
+    cin >> choose;
+    if (choose == 'm' || choose == 'M')
+    {
+        main();
+    }
+    else if (choose == 'a' || choose == 'A')
+    {
+        ShowMyTicket();
+    }
+    else
+    {
+        exit(0);
+    }
+
+}
