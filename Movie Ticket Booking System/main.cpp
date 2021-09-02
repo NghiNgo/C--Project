@@ -355,3 +355,110 @@ ExitMenu:
     }
 
 }
+
+void CheckSeat() {
+    system("cls");
+
+    // Variables
+    char choose;
+    string input;
+    // Variables End
+
+    Welcome();
+    cin.ignore(1, '\n');
+    qstate = mysql_query(conn, "select * from  movie_tb");
+
+    if (!qstate)
+    {
+        res = mysql_store_result(conn);
+        printf("-------------------------------------\n");
+        printf("| %-15s | %-15s |\n", "Name", "Seat");
+        while ((row = mysql_fetch_row(res)))
+        {
+            printf("| %-15s | %-15s |\n", row[1], row[7]);
+        }
+        printf("-------------------------------------\n");
+    }
+    else
+    {
+        cout << "Query Execution Problem!" << mysql_errno(conn) << endl;
+    }
+
+ExitMenu:
+    cout << "Press 'm' to Menu and any other key to Exit: ";
+    cin >> choose;
+    if (choose == 'm' || choose == 'M')
+    {
+        main();
+    }
+    else
+    {
+        exit(0);
+    }
+}
+
+void AddNewMovie() {
+
+    // Initial Load
+    system("cls");
+    // Initial Load End
+
+    // Variables
+    string name = "";
+    string genre = "";
+    string format = "";
+    string showDate = "";
+    string showTime = "";
+    string ticketPrice = "";
+    string seat = "";
+    char choose;
+    // Variables End
+
+    Welcome();
+    cin.ignore(1, '\n');
+    cout << "Enter Name: ";
+    getline(cin, name);
+    cout << "Enter Genre: ";
+    getline(cin, genre);
+    cout << "Enter format: ";
+    getline(cin, format);
+    cout << "Enter Show Date (dd-mm-yyyy): ";
+    getline(cin, showDate);
+    cout << "Enter Show Time: ";
+    getline(cin, showTime);
+    cout << "Enter Ticket Price: ";
+    getline(cin, ticketPrice);
+    cout << "Enter Seat: ";
+    getline(cin, seat);
+
+    string insert_query = "insert into movie_tb (m_name, m_genre, m_format, m_showdate, m_showtime, m_ticketprice, m_seat) values ('" + name + "','" + genre + "','" + format + "',STR_TO_DATE('" + showDate + "', '%d-%m-%Y'),'" + showTime + "','" + ticketPrice + "', '" + seat + "')";
+
+    const char* q = insert_query.c_str(); // c_str converts string to constant char and this is required
+
+    qstate = mysql_query(conn, q);
+
+    if (!qstate)
+    {
+        cout << endl << "Successfully added in database." << endl;
+    }
+    else
+    {
+        cout << "Query Execution Problem!" << mysql_errno(conn) << endl;
+    }
+
+    // Exit Code
+    cout << "Press 'm' to Menu and 'a' to Insert Again Or Any Other key to exit: ";
+    cin >> choose;
+    if (choose == 'm' || choose == 'M')
+    {
+        main();
+    }
+    else if (choose == 'a' || choose == 'A')
+    {
+        AddNewMovie();
+    }
+    else
+    {
+        exit(0);
+    }
+}
