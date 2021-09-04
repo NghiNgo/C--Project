@@ -462,3 +462,197 @@ void AddNewMovie() {
         exit(0);
     }
 }
+
+void EditMovie() {
+
+    system("cls");
+
+    // Variables
+    string name = "";
+    string genre = "";
+    string format = "";
+    string showDate = "";
+    string showTime = "";
+    string ticketPrice = "";
+    string seat = "";
+    string items[5000];
+    char choose;
+    int itemId;
+    bool HaveException = false;
+    bool NotInDatabase = false;
+    int indexForId = 0;
+
+    // Store Variables
+    string storeid = "";
+    string storename = "";
+    string storegenre = "";
+    string storeformat = "";
+    string storeshowDate = "";
+    string storeshowTime = "";
+    string storeticketPrice = "";
+    string storeseat = "";
+    // Variables End
+
+    Welcome();
+    qstate = mysql_query(conn, "select m_id, m_name from movie_tb");
+    if (!qstate)
+    {
+        res = mysql_store_result(conn);
+        printf("--------------------------------\n");
+        printf("| %-10s | %-15s |\n", "Column Id", "Name");
+        while ((row = mysql_fetch_row(res)))
+        {
+            printf("| %-10s | %-15s |\n", row[0], row[1]);
+            items[indexForId] = row[0];
+            indexForId++;
+        }
+        printf("--------------------------------\n");
+    }
+    else
+    {
+        cout << "Query Execution Problem!" << mysql_errno(conn) << endl;
+    }
+
+    try
+    {
+        cout << endl;
+        cout << "Enter Item ID: ";
+        cin >> itemId;
+        cout << endl;
+    }
+    catch (exception e)
+    {
+        cout << "Please Enter a valid NUMBER." << endl;
+        HaveException = true;
+        goto ExitMenu;
+    }
+
+    if (HaveException == false)
+    {
+        stringstream streamid;
+        string strid;
+        streamid << itemId;
+        streamid >> strid;
+
+        for (int i = 0; i < indexForId; i++)
+        {
+            if (strid != items[i])
+            {
+                NotInDatabase = true;
+            } else
+            {
+                NotInDatabase = false;
+                break;
+            }
+        }
+
+        if (NotInDatabase == false)
+        {
+            string findbyid_query = "select * from movie_tb where m_id = '" + strid + "'";
+            const char* qi = findbyid_query.c_str();
+            qstate = mysql_query(conn, qi);
+
+            if (!qstate)
+            {
+                res = mysql_store_result(conn);
+                while (row = mysql_fetch_row(res))
+                {
+                    cout << "Column ID: " << row[0] << "\nName: "
+                         << row[1] << "\nGenre: " << row[2] << "\nFormat: " << row[3] << "\nShow Date: " << row[4] << "\nShow Time: " << row[5] << "\nTicket Price: " << row[6] << "\nSeat: " << row[7] << endl << endl;
+
+                    storeid = row[0];
+                    storename = row[1];
+                    storegenre = row[2];
+                    storeformat = row[3];
+                    storeshowDate = row[4];
+                    storeshowTime = row[5];
+                    storeticketPrice = row[6];
+                    storeseat = row[7];
+                }
+            }
+            else
+            {
+                cout << "Query Execution Problem!" << mysql_errno(conn) << endl;
+            }
+
+            cin.ignore(1, '\n');
+            string defaultString = "xN";
+            cout << "Enter Name (" << defaultString << "  to not change): ";
+            getline(cin, name);
+            if (name == defaultString)
+            {
+                name = storename;
+            }
+            cout << "Enter Genre (" << defaultString << "  to not change): ";
+            getline(cin, genre);
+            if (genre == defaultString)
+            {
+                genre = storegenre;
+            }
+            cout << "Enter Format (" << defaultString << "  to not change): ";
+            getline(cin, format);
+            if (format == defaultString)
+            {
+                format = storeformat;
+            }
+            cout << "Enter Show Date (" << defaultString << "  to not change): ";
+            getline(cin, showDate);
+            if (showDate == defaultString)
+            {
+                showDate = storeshowDate;
+            }
+            cout << "Enter Show Time (" << defaultString << "  to not change): ";
+            getline(cin, showTime);
+            if (showTime == defaultString)
+            {
+                showTime = storeshowTime;
+            }
+            cout << "Enter Ticket Price (" << defaultString << "  to not change): ";
+            cin >> ticketPrice;
+            if (ticketPrice == defaultString)
+            {
+                ticketPrice = storeticketPrice;
+            }
+            cout << "Enter Seat (" << defaultString << "  to not change): ";
+            cin >> storeseat;
+            if (seat == defaultString)
+            {
+                seat = storeseat;
+            }
+
+            string update_query = "update movie_tb set m_name = '" + name + "', m_genre = '" + genre + "', m_format = '" + format + "', m_showdate = '" + showDate + "', m_showtime = '" + showTime + "', m_ticketprice = '" + ticketPrice + "', m_seat = '" + seat + "' where m_id = '" + strid + "'";
+            const char* qu = update_query.c_str();
+            qstate = mysql_query(conn, qu);
+
+            if (!qstate)
+            {
+                cout << endl << "Successfully Saved In Database." << endl;
+            }
+            else
+            {
+                cout << "Failed To Update!" << mysql_errno(conn) << endl;
+            }
+
+        }
+        else
+        {
+            cout << "Item Not Found in database." << endl;
+        }
+    }
+
+ExitMenu:
+    cout << "Press 'm' to Menu, 'e' to edit another item and any other key to Exit: ";
+    cin >> choose;
+    if (choose == 'm' || choose == 'M')
+    {
+        main();
+    }
+    else if (choose == 'e' || choose == 'E')
+    {
+        EditMovie();
+    }
+    else
+    {
+        exit(0);
+    }
+}
