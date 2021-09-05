@@ -656,3 +656,149 @@ ExitMenu:
         exit(0);
     }
 }
+
+void DeleteMovie() {
+    system("cls");
+
+    // Variables
+    char choose;
+    int itemId;
+    string items[5000];
+    int indexForId = 0;
+    bool HaveException = false, NotInDatabase = false;
+    // Variables End
+
+    Welcome();
+    qstate = mysql_query(conn, "select * from movie_tb");
+    if (!qstate)
+    {
+        res = mysql_store_result(conn);
+        printf("--------------------------------------------------\n");
+        printf("| %-10s | %-15s | %-15s |\n", "Column Id", "Name", "Price");
+        printf("--------------------------------------------------\n");
+        while ((row = mysql_fetch_row(res)))
+        {
+            printf("| %-10s | %-15s | %-15s |\n", row[0], row[1], row[6]);
+            items[indexForId] = row[0];
+            indexForId++;
+        }
+        printf("--------------------------------------------------\n");
+    }
+    else
+    {
+        cout << "Query Execution Problem!" << mysql_errno(conn) << endl;
+    }
+
+    try
+    {
+        cout << endl;
+        cout << "Enter Item ID: ";
+        cin >> itemId;
+        cout << endl;
+    }
+    catch (exception e)
+    {
+        cout << "Please Enter a valid NUMBER." << endl;
+        HaveException = true;
+        goto ExitMenu;
+    }
+
+    if (HaveException == false)
+    {
+        stringstream streamid;
+        string strid;
+        streamid << itemId;
+        streamid >> strid;
+
+        for (int i = 0; i < indexForId; i++)
+        {
+            if (strid != items[i])
+            {
+                NotInDatabase = true;
+            } else
+            {
+                NotInDatabase = false;
+                break;
+            }
+        }
+
+        if (NotInDatabase == false)
+        {
+            string delete_query = "delete from movie_tb where m_id = '" + strid + "'";
+            const char* qd = delete_query.c_str();
+            qstate = mysql_query(conn, qd);
+
+            if (!qstate)
+            {
+                cout << "Successfully Deleted." << endl;
+            }
+            else
+            {
+                cout << "Failed To Delete!" << mysql_errno(conn) << endl;
+            }
+
+        }
+        else
+        {
+            cout << "Item Not Found in database." << endl;
+        }
+    }
+
+    // Exit Code
+ExitMenu:
+    cout << "Press 'm' to Menu, 'd' to delete another item and any other key to Exit: ";
+    cin >> choose;
+    if (choose == 'm' || choose == 'M')
+    {
+        main();
+    }
+    else if (choose == 'd' || choose == 'D')
+    {
+        DeleteMovie();
+    }
+    else
+    {
+        exit(0);
+    }
+}
+
+void ShowMovieList() {
+    system("cls");
+
+    // Variables
+    char choose;
+    string input;
+    // Variables End
+
+    Welcome();
+    qstate = mysql_query(conn, "select * from movie_tb");
+    if (!qstate)
+    {
+        res = mysql_store_result(conn);
+        printf("-------------------------------------------------------------------------------------------------------------\n");
+        printf("| %-15s | %-15s | %-15s | %-15s | %-15s | %-15s |\n", "Name", "Genre", "Format", "Show Date", "Show Time", "Price");
+        printf("-------------------------------------------------------------------------------------------------------------\n");
+        while ((row = mysql_fetch_row(res)))
+        {
+            printf("| %-15s | %-15s | %-15s | %-15s | %-15s | %-15s |\n", row[1], row[2], row[3], row[4], row[5], row[6], row[7]);
+        }
+        printf("-------------------------------------------------------------------------------------------------------------\n");
+    }
+    else
+    {
+        cout << "Query Execution Problem!" << mysql_errno(conn) << endl;
+    }
+
+ExitMenu:
+    cout << "Press 'm' to Menu any other key to Exit: ";
+    cin >> choose;
+    if (choose == 'm' || choose == 'M')
+    {
+        main();
+    }
+    else
+    {
+        exit(0);
+    }
+}
+
